@@ -15,22 +15,48 @@ class App extends React.Component {
 
   start(subreddit) {
     let url = "https://www.reddit.com/r/"+subreddit+".json";
-    let json = loadJSON(url);
+    let json = this.loadJSON(url);
 
     //pasrse -> sentence to object
 
     for(var i=0; i < json.data.children; i++) {
-      parseForTickets(json.data.children[i]);
+      this.parseForTickets(json.data.children[i]);
       let commentURL = "https://www.reddit.com/r/pennystocks/comments/"+json.data.children[i].id+".json";;
-      let jsonComments = loadJSON(commentURL);
-      parseForTickers(jsonComments);
+      let jsonComments = this.loadJSON(commentURL);
+      this.parseForTickers(jsonComments);
     }
+
+
   }
 
-  // getComments()
-  // {
 
-  // }
+  loadJSON(url) {
+    console.log("Works");
+    fetch(url)
+      .then(res => res.json())
+      .then(
+
+        (result) => {
+          console.log(result);
+          this.setState({
+            isLoaded: true,
+            items: result.data.children
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          console.log(error);
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+      )
+  }
+
+
   //parsing -> traversing parts of a data structure to access a specific value point;
 
   parseForTickets(jsonComments) {
@@ -51,14 +77,14 @@ class App extends React.Component {
 
     this.setState({tickers: tickers});
 
-    if (jsonComment.num_comments > 0) {
-      // var nextComments = parse next level of comments
-      parseForTickets(nextComments);
+    if (jsonComments.num_comments > 0) {
+      var nextComments = {};
+      this.parseForTickets(nextComments);
     }
 
     if (jsonComments.replies.length > 0) {
-      // var nextComments = parse next level of comments
-      parseForTickets(nextComments);
+      var nextComments = {};
+      this.parseForTickets(nextComments);
     }
   }
 
@@ -68,7 +94,7 @@ class App extends React.Component {
       <div>
         <form>
           <input type="text" className="reddit-search" name="reddit-name" placeholder="enter reddit url" />
-          <button className="searc-btn" onClick={this.start("reddit")}>Search</button>
+          <button className="searc-btn" onClick={this.start}>Search</button>
         </form>
         <testFetch />
       </div>

@@ -8,21 +8,21 @@ export default class TestFetch extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
-      items: []
+      items: [],
     };
   }
 
   componentDidMount() {
     console.log("Works");
     fetch("https://www.reddit.com/r/pennystocks.json")
-      // .then(res => res.json())
+      .then(res => res.json())
       .then(
 
         (result) => {
           console.log(result);
           this.setState({
             isLoaded: true,
-            items: result.items
+            items: result.data.children
           });
         },
         // Note: it's important to handle errors here
@@ -47,9 +47,9 @@ export default class TestFetch extends React.Component {
     } else {
       return (
         <ul>
-          {items.map(item => (
-            <li key={item.name}>
-              {item.name} {item.price}
+          {items.map((item, i) => (
+            <li key={i}>
+              {item.data.domain} {item.data.author}
             </li>
           ))}
         </ul>

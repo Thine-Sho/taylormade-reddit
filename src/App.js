@@ -30,6 +30,10 @@ class App extends React.Component {
         )
   }
 
+
+
+
+
   start() {
     if (this.state.subReddit.length === 0) {
       return alert('please enter a subreddit');
@@ -51,7 +55,17 @@ class App extends React.Component {
          * you'll need to write a new function to pass as the callback to loadJSON below
          * that callback should receive a comment object, so you'll need to parse the results of loadJSON a little deeper.
         **/
-        that.loadJSON(commentURL, that.parseForTickers);
+        that.loadJSON(commentURL, (comments) => {
+
+          comments.map( (item) => {
+            item.data.children.map((itemA) => {
+              that.parseForTickers(itemA.data);
+            });
+          });
+
+        });
+
+
         return true;
       });
     });
@@ -60,7 +74,7 @@ class App extends React.Component {
   //parsing -> traversing parts of a data structure to access a specific value point;
 
   parseForTickers(jsonComments) {
-    console.log(jsonComments);
+    // console.log(jsonComments);
     let text = jsonComments.selftext || jsonComments.body || jsonComments.title;
     if (!text) {
       return console.log('NO TEXT PROPERTY FOUND', jsonComments);

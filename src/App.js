@@ -79,7 +79,7 @@ class App extends React.Component {
     if (!text) {
       return console.log('NO TEXT PROPERTY FOUND', jsonComments);
     }
-    console.log("parsing ", text);
+    // console.log("parsing ", text);
     let matches = text.match(/[A-Z]{3}/g); // weak regex for stock tickers
     // matches = ["HFS", "GPX", "AJS"];
 
@@ -112,11 +112,11 @@ class App extends React.Component {
   render()  {
     var tickerLis = [];
     for(var code in this.state.tickers) {
-      tickerLis.push(<li key={code}> {code} = {this.state.tickers[code]}</li>)
+      tickerLis.push(<li key={code}> {code}: {this.state.tickers[code]}</li>)
     }
 
     return (
-      <div>
+      <div className="search-console">
           <input type="text" onChange={e => this.setState({subReddit: e.target.value})}
                  value={this.state.subReddit} placeholder="enter reddit url" />
           <button className="searc-btn" onClick={this.start}>Search</button>

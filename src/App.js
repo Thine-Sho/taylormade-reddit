@@ -48,7 +48,7 @@ class App extends React.Component {
         } else {
           that.parseForTickers(item.data);
         }
-        let commentURL = "https://www.reddit.com/r/pennystocks/comments/"+item.data.id+".json";
+        let commentURL = "https://www.reddit.com/r/"+that.state.subReddit+"/comments/"+item.data.id+".json";
         console.log("NEXT UP  " + commentURL);
         /** jahi  THIS NEXT LINE WILL NOT WORK.
          * you can look at the console under "NEXT UP" to see the structure of comments
@@ -109,16 +109,25 @@ class App extends React.Component {
     }
   }
 
-  render()  {
+
+  render(){
     var tickerLis = [];
-    for(var code in this.state.tickers) {
-      tickerLis.push(<li key={code}> {code}: {this.state.tickers[code]}</li>)
-    }
+
+    let keyEntries = Object.entries(this.state.tickers).sort((a,b) => {
+      return (b[1] - a[1])
+    });
+
+    keyEntries.map( ([prop, val]) => {
+      tickerLis.push(<li key={prop}> {prop}: <span>{val}</span></li>)
+    });
+
+  console.log(JSON.stringify(this.state.tickers));
+
 
     return (
       <div className="search-console">
           <input type="text" onChange={e => this.setState({subReddit: e.target.value})}
-                 value={this.state.subReddit} placeholder="enter reddit url" />
+                 value={this.state.subReddit} placeholder="Enter subreddit name" />
           <button className="searc-btn" onClick={this.start}>Search</button>
         <ul>
           {tickerLis}
